@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Next Station Budapest Metro</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Menu screen -->
+<section id="menu" class="screen active">
+    <!-- Background video -->
+    <video id="menu-bg-video" autoplay muted loop playsinline>
+        <source src="MetroVideoIntro.mp4" type="video/mp4" />
+        <!-- Fallback text if video can't load -->
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Foreground panel -->
+    <div class="panel">
+        <h1>Budapest Metro</h1>
+        <p>Enter your name and press <strong>Start</strong>.</p>
+        <form id="menu-form" novalidate>
+            <input
+                    id="player-name"
+                    type="text"
+                    placeholder="Your name"
+                    required
+                    minlength="1"
+                    maxlength="30"
+                    autocomplete="name"
+                    aria-label="Player name"
+            />
+            <button type="submit">Start</button>
+        </form>
+
+        <div class="menu-actions">
+            <button id="btn-rules" type="button" class="secondary">Game rules</button>
+        </div>
+
+        <!-- video credit -->
+        <p style="margin-top:16px; font-size:0.85rem; opacity:0.75; text-align:center;">
+            Video by <a href="https://www.tiktok.com/@taurus_fan" target="_blank" rel="noopener noreferrer">
+            @taurus_fan on TikTok</a>
+        </p>
+    </div>
+</section>
+
+<!-- Game screen -->
+<!-- Game screen -->
+<section id="game" class="screen">
+    <div class="hud">
+        <div class="hud-row">
+            <span id="hud-player">—</span>
+            <span>•</span>
+            <span>Time: <strong id="hud-time">0:00</strong></span>
+            <span>•</span>
+            <span>Current line: <strong id="hud-line">—</strong></span>
+        </div>
+
+        <div class="hud-row" id="hud-rounds"></div>
+
+        <div class="hud-row">
+            <div class="card" id="card" data-ptype="side">—</div>
+            <div class="controls">
+                <button id="btn-draw" type="button">Draw card</button>
+                <button id="btn-skip" type="button" class="secondary">Next round</button>
+                <button id="btn-end"  type="button" class="secondary" disabled>End round</button>
+            </div>
+        </div>
+
+        <div class="hud-row" id="hud-scores">
+            <span>Round FP: <strong id="hud-round-score">0</strong></span>
+            <span>•</span>
+            <span>Total score: <strong id="hud-total-score">0</strong></span>
+            <span>•</span>
+            <label class="train-slider-label">
+                Train stations:
+                <input id="train-slider" type="range" min="0" max="5" value="0" disabled />
+                <span id="hud-pp">0</span>
+            </label>
+        </div>
+
+        <div class="hud-row" id="hud-results" hidden>
+            <div class="result-panel">
+                <h2>Game results</h2>
+                <b><p id="result-summary"></p></b>
+                <p id="result-explanation"></p>
+                <ul id="result-rounds"></ul>
+                <p id="result-junctions"></p>
+            </div>
+        </div>
+
+    </div> <!-- end .hud -->
+    </div>
+
+    <div class="board">
+        <div class="grid" id="grid"></div>
+        <!-- Danube -->
+        <canvas id="river" class="river"></canvas>
+        <!-- Metro lines -->
+        <svg class="lines" id="svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"></svg>
+    </div>
+</section>
+
+<!-- Rules modal -->
+<div id="rules-modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="rules-title">
+    <div class="modal-backdrop" data-close="rules"></div>
+    <div class="modal-dialog" role="document">
+        <div class="modal-header">
+            <h2 id="rules-title">Game rules</h2>
+            <button id="rules-close" class="icon-btn" aria-label="Close">✕</button>
+        </div>
+        <div class="modal-body">
+            <h3>Goal</h3>
+            <p>Build metro lines in the required order(M1->M4), placing valid sections between stations.</p>
+
+            <h3>Controls</h3>
+            <ul>
+                <li><strong>Start:</strong> Enter your name → <em>Start</em>.</li>
+                <li><strong>Draw card:</strong> Press <em>Draw card</em> to reveal a symbol (A/B/C/D/★ Joker)</li>
+                <li><strong>Build section:</strong> <em>Click origin station</em> → <em>click target station</em> that matches the card.</li>
+                <li><strong>Skip:</strong> <em>Next card</em> draws without building.</li>
+                <li><strong>End round:</strong> A round ends after 8 cards in total, or when the 5th side
+                    / center card is drawn. At that point you can no longer draw and must press <em>End round</em>.</li>
+            </ul>
+
+            <h3>Placement rules</h3>
+            <ul>
+                <li>First section must start from the line’s designated start station.</li>
+                <li>Next sections must start from an endpoint of that line.</li>
+                <li>Only straight or 45° diagonal segments.</li>
+                <li>No passing through other stations; no crossing existing segments (except at (?) station).</li>
+                <li>No duplicate segments between the same pair of stations.</li>
+                <li><strong>Joker:</strong> Matches any symbol; <strong>“?” station</strong> accepts any card.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
